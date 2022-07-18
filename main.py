@@ -1,23 +1,23 @@
+import selenium
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.firefox import GeckoDriverManager
 
 driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
-
-
 driver.get('https://www.nowehoryzonty.pl/r/')
-# assert 'NH' in driver.title
 
-film_list=["Vortex","Tama","Pokot"]
+txt_file = open("reservation_list.txt", "r")
+file_content = txt_file.read()
+film_list = file_content.split("\n")
+print(film_list)
+txt_file.close()
 
 for film in film_list:
-    element = driver.find_element("xpath", f"//div[text()='{film}']")
-    if element.is_displayed():
-        element.click()
-    else:
-        driver.refresh()
+    try:
+        driver.find_element("xpath", f"//div[text()='{film}']").click()
+    except selenium.common.exceptions.NoSuchElementException:
+        print(f"Film {film} not found.")
+
 
 
 
